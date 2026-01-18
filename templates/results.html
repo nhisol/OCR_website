@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Results{% endblock %}
+{% block content %}
+  <h2>Results</h2>
+  {% if results %}
+    <div class="row">
+      {% for r in results %}
+        <div class="col-md-4 mb-4">
+          <div class="card">
+            <img src="{{ url_for('static', filename='uploads/' ~ r.filename) }}" class="card-img-top" alt="{{ r.original_filename }}">
+            <div class="card-body">
+              <h5 class="card-title">{{ r.original_filename }}</h5>
+              <p class="card-text"><small class="text-muted">Uploaded: {{ r.timestamp }}</small></p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No results yet. Try uploading an image.</p>
+  {% endif %}
+
+  <a href="{{ url_for('upload') }}" class="btn btn-primary">Upload Another</a>
+  <a href="{{ url_for('index') }}" class="btn btn-link">Back to Home</a>
+{% endblock %}
