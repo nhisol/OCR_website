@@ -1,5 +1,5 @@
 import torch 
-from config import MODEL_PATH
+from config import MODEL_PATH, PROCESSOR_PATH
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 from PIL import Image
 import os 
@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-proccessor = AutoTokenizer.from_pretrained(MODEL_PATH)
+proccessor = AutoTokenizer.from_pretrained(PROCESSOR_PATH)
 model = AutoModelForSequenceClassification.from_pretrained(MODEL_PATH,
                                                            torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32)
 

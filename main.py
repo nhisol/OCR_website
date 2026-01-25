@@ -1,6 +1,7 @@
 import os
 import json
 from datetime import datetime
+from model import predict
 from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 
@@ -59,17 +60,23 @@ def upload():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             # avoid collisions by prefixing timestamp
-            ts = datetime.utcnow().strftime('%Y%m%d%H%M%S%f')
+            ts = datetime.strftime('%Y%m%d%H%M%S%f')
             saved_name = f"{ts}_{filename}"
             save_path = os.path.join(app.config['UPLOAD_FOLDER'], saved_name)
             # ensure upload dir exists
             os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
             file.save(save_path)
-
+            try:
+                ocr_text = predict(save_path)
+            except Exception as e:
+                ocr_text = "ERROR processing image"
+                flash(f'Error processing image: {e}')
+                
             record = {
                 'filename': saved_name,
                 'original_filename': filename,
-                'timestamp': datetime.utcnow().isoformat() + 'Z'
+                'timestamp': datetime.isoformat() + 'Z',
+                'ocr_text': ocr_text
             }
             save_result(record)
             # After saving, go to results page
