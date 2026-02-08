@@ -4,6 +4,13 @@ from datetime import datetime
 from model import predict
 from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
+import google.generativeai as genai
+from dotenv import load_dotenv 
+load_dotenv()
+
+GEMINI_API_KEY =  os.getenv("GEMINI_API_KEY")
+genai.confirgue(api_key = GEMINI_API_KEY)
+gemini_model = genai.GenerativeModel('gemini-1.5-flash')
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join('static', 'uploads')
@@ -71,12 +78,24 @@ def upload():
             except Exception as e:
                 ocr_text = "ERROR processing image"
                 flash(f'Error processing image: {e}')
-                
+            gemini_result = 'Gemini OCR was failed to return result'
+            try:
+                from PIL import Image
+                img = Image.open(save_path)
+                gemini_res = gemini_model.generate_content([
+                    "Extract all text from this image as accurently as possible",
+                    img
+                ])
+                gemini_result = gemini_res.text
+            except Exception as e:
+                flash(f'Error wih Gemini OCR:{e}')
+
             record = {
                 'filename': saved_name,
                 'original_filename': filename,
                 'timestamp': datetime.isoformat() + 'Z',
-                'ocr_text': ocr_text
+                'ocr_text': ocr_text,
+                'gemini_text' : gemini_result,
             }
             save_result(record)
             # After saving, go to results page
