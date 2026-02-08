@@ -3,18 +3,18 @@ import json
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
-
-import google.generativeai as genai
+import logging
+from google import genai
 from dotenv import load_dotenv
 
 from model import predict
 
+from PIL import Image
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 load_dotenv()
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-genai.configure(api_key=GEMINI_API_KEY)
-# Initialize the model (Gemini 1.5 Flash is great for OCR/Image tasks)
-gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+client = genai.Client()
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join('static', 'uploads')
@@ -79,18 +79,21 @@ def upload():
             file.save(save_path)
             try:
                 ocr_text = predict(save_path)
+                logger.info(f"OCR Text: {ocr_text}")
             except Exception as e:
                 ocr_text = "ERROR processing image."
-                flash(f'Error processing image: {e}')
+                logger.info(f'Error processing image: {e}')
 
             gemini_result = "Gemini OCR was failed to return result."
             try:
-                from PIL import Image
                 img = Image.open(save_path)
-                gemini_res = gemini_model.generate_content([
-                    "Extract all text from this image as accurately as possible.", 
-                    img
-                ])
+                gemini_res = client.models.generate_content(
+                    model='gemini-2.0-flash',
+                    contents=[
+                        'Extract text from this image.',
+                        img
+                    ]
+                )
                 gemini_result = gemini_res.text 
             except Exception as e:
                 flash(f'Error with Gemini OCR: {e}')
