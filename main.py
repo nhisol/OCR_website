@@ -72,8 +72,8 @@ def upload():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             # avoid collisions by prefixing timestamp
-            ts = datetime.strftime('%Y%m%d%H%M%S%f')
-            saved_name = f"{ts}_{filename}"
+            # ts = datetime.strftime('%Y%m%d%H%M%S%f')
+            saved_name = f"{filename}"
             save_path = os.path.join(app.config['UPLOAD_FOLDER'], saved_name)
             # ensure upload dir exists
             os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
