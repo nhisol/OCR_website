@@ -1,3 +1,7 @@
 model
 processor
 .env
+model_ocr
+processor_ocr
+.env
+static/uploads/

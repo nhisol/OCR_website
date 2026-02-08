@@ -1,1 +1,58 @@
-[]
+[
+  {
+    "filename": "20260208090838564176_Screenshot_from_2026-01-18_09-35-36.png",
+    "original_filename": "Screenshot_from_2026-01-18_09-35-36.png",
+    "timestamp": "2026-02-08T09:08:39.437921Z",
+    "ocr_text": "ERROR processing image.",
+    "gemini_text": "Gemini OCR was failed to return result."
+  },
+  {
+    "filename": "20260208090648513008_Screenshot_from_2026-01-18_09-35-36.png",
+    "original_filename": "Screenshot_from_2026-01-18_09-35-36.png",
+    "timestamp": "2026-02-08T09:06:49.894098Z",
+    "ocr_text": "ERROR processing image.",
+    "gemini_text": "Gemini OCR was failed to return result."
+  },
+  {
+    "filename": "20260208090527678403_Screenshot_from_2026-01-18_09-35-36.png",
+    "original_filename": "Screenshot_from_2026-01-18_09-35-36.png",
+    "timestamp": "2026-02-08T09:05:29.310818Z",
+    "ocr_text": "ERROR processing image.",
+    "gemini_text": "Gemini OCR was failed to return result."
+  },
+  {
+    "filename": "20260208090415650421_Screenshot_from_2026-01-18_09-35-36.png",
+    "original_filename": "Screenshot_from_2026-01-18_09-35-36.png",
+    "timestamp": "2026-02-08T09:04:15.664496Z",
+    "ocr_text": "ERROR processing image.",
+    "gemini_text": "Gemini OCR was failed to return result."
+  },
+  {
+    "filename": "20260208090125685998_Screenshot_from_2026-01-18_09-35-36.png",
+    "original_filename": "Screenshot_from_2026-01-18_09-35-36.png",
+    "timestamp": "2026-02-08T09:01:26.108051Z",
+    "ocr_text": "ERROR processing image.",
+    "gemini_text": "Gemini OCR was failed to return result."
+  },
+  {
+    "filename": "20260208085901100974_Screenshot_from_2026-01-18_09-35-36.png",
+    "original_filename": "Screenshot_from_2026-01-18_09-35-36.png",
+    "timestamp": "2026-02-08T08:59:06.419846Z",
+    "ocr_text": "ERROR processing image.",
+    "gemini_text": "Gemini OCR was failed to return result."
+  },
+  {
+    "filename": "20260208085655222768_Screenshot_from_2026-01-22_13-58-27.png",
+    "original_filename": "Screenshot_from_2026-01-22_13-58-27.png",
+    "timestamp": "2026-02-08T08:57:00.484173Z",
+    "ocr_text": "ERROR processing image.",
+    "gemini_text": "Gemini OCR was failed to return result."
+  },
+  {
+    "filename": "20260208085559531655_Screenshot_from_2026-01-22_13-58-27.png",
+    "original_filename": "Screenshot_from_2026-01-22_13-58-27.png",
+    "timestamp": "2026-02-08T08:56:05.220104Z",
+    "ocr_text": "ERROR processing image.",
+    "gemini_text": "Gemini OCR was failed to return result."
+  }
+]

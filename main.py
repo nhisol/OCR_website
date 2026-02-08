@@ -4,6 +4,7 @@ from datetime import datetime
 from model import predict
 from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
+<<<<<<< HEAD
 import google.generativeai as genai
 from dotenv import load_dotenv 
 load_dotenv()
@@ -11,6 +12,20 @@ load_dotenv()
 GEMINI_API_KEY =  os.getenv("GEMINI_API_KEY")
 genai.confirgue(api_key = GEMINI_API_KEY)
 gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+=======
+import logging
+from google import genai
+from dotenv import load_dotenv
+
+from model import predict
+
+from PIL import Image
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+load_dotenv()
+
+client = genai.Client()
+>>>>>>> main
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join('static', 'uploads')
@@ -67,7 +82,11 @@ def upload():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             # avoid collisions by prefixing timestamp
+<<<<<<< HEAD
             ts = datetime.strftime('%Y%m%d%H%M%S%f')
+=======
+            ts = datetime.now().strftime('%Y%m%d%H%M%S%f')
+>>>>>>> main
             saved_name = f"{ts}_{filename}"
             save_path = os.path.join(app.config['UPLOAD_FOLDER'], saved_name)
             # ensure upload dir exists
@@ -75,6 +94,7 @@ def upload():
             file.save(save_path)
             try:
                 ocr_text = predict(save_path)
+<<<<<<< HEAD
             except Exception as e:
                 ocr_text = "ERROR processing image"
                 flash(f'Error processing image: {e}')
@@ -89,13 +109,39 @@ def upload():
                 gemini_result = gemini_res.text
             except Exception as e:
                 flash(f'Error wih Gemini OCR:{e}')
+=======
+                logger.info(f"OCR Text: {ocr_text}")
+            except Exception as e:
+                ocr_text = "ERROR processing image."
+                logger.info(f'Error processing image: {e}')
+>>>>>>> main
 
+            gemini_result = "Gemini OCR was failed to return result."
+            try:
+                img = Image.open(save_path)
+                gemini_res = client.models.generate_content(
+                    model='gemini-2.0-flash',
+                    contents=[
+                        'Extract text from this image.',
+                        img
+                    ]
+                )
+                gemini_result = gemini_res.text 
+            except Exception as e:
+                flash(f'Error with Gemini OCR: {e}')
+                
             record = {
                 'filename': saved_name,
                 'original_filename': filename,
+<<<<<<< HEAD
                 'timestamp': datetime.isoformat() + 'Z',
                 'ocr_text': ocr_text,
                 'gemini_text' : gemini_result,
+=======
+                'timestamp': datetime.now().isoformat() + 'Z',
+                'ocr_text': ocr_text,                   # Our model result
+                "gemini_text": gemini_result,           # Gemini model result
+>>>>>>> main
             }
             save_result(record)
             # After saving, go to results page

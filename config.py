@@ -11,4 +11,6 @@ PROCESSOR_PATH = os.path.join(BASE_DIR, 'processor')
 
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB
 
-TORCH_DEVICE = 'cuda' if os.getenv('USE_CUDA', 'False') == 'True' else 'cpu'
+TORCH_DEVICE = "cuda" if os.getenv("USE_CUDA", "true").lower() == "true" else "cpu"
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "your-default-api-key")
