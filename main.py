@@ -4,6 +4,18 @@ from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
 
+import google.generativeai as genai
+from dotenv import load_dotenv
+
+from model import predict
+
+load_dotenv()
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+genai.configure(api_key=GEMINI_API_KEY)
+# Initialize the model (Gemini 1.5 Flash is great for OCR/Image tasks)
+gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join('static', 'uploads')
 RESULTS_PATH = os.path.join(BASE_DIR, 'results.json')
@@ -59,17 +71,36 @@ def upload():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             # avoid collisions by prefixing timestamp
-            ts = datetime.utcnow().strftime('%Y%m%d%H%M%S%f')
+            ts = datetime.now().strftime('%Y%m%d%H%M%S%f')
             saved_name = f"{ts}_{filename}"
             save_path = os.path.join(app.config['UPLOAD_FOLDER'], saved_name)
             # ensure upload dir exists
             os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
             file.save(save_path)
+            try:
+                ocr_text = predict(save_path)
+            except Exception as e:
+                ocr_text = "ERROR processing image."
+                flash(f'Error processing image: {e}')
 
+            gemini_result = "Gemini OCR was failed to return result."
+            try:
+                from PIL import Image
+                img = Image.open(save_path)
+                gemini_res = gemini_model.generate_content([
+                    "Extract all text from this image as accurately as possible.", 
+                    img
+                ])
+                gemini_result = gemini_res.text 
+            except Exception as e:
+                flash(f'Error with Gemini OCR: {e}')
+                
             record = {
                 'filename': saved_name,
                 'original_filename': filename,
-                'timestamp': datetime.utcnow().isoformat() + 'Z'
+                'timestamp': datetime.now().isoformat() + 'Z',
+                'ocr_text': ocr_text,                   # Our model result
+                "gemini_text": gemini_result,           # Gemini model result
             }
             save_result(record)
             # After saving, go to results page

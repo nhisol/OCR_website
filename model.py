@@ -1,6 +1,6 @@
 import torch 
-from config import MODEL_PATH
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from config import MODEL_PATH, PROCESSOR_PATH
+from transformers import AutoModelForImageTextToText, AutoTokenizer
 from PIL import Image
 import os 
 import logging
@@ -9,10 +9,12 @@ logger = logging.getLogger(__name__)
 
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-proccessor = AutoTokenizer.from_pretrained(MODEL_PATH)
-model = AutoModelForSequenceClassification.from_pretrained(MODEL_PATH,
-                                                           torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32)
-
+proccessor = AutoTokenizer.from_pretrained(PROCESSOR_PATH)
+model = AutoModelForImageTextToText.from_pretrained(
+    MODEL_PATH,
+    # Fix the deprecation warning by using 'dtype' instead of 'torch_dtype'
+    dtype=torch.float16 if torch.cuda.is_available() else torch.float32
+)
 model.to(DEVICE)
 model.eval()
 logger.info(f"Model loaded on {DEVICE}")
